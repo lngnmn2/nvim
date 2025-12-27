@@ -1,377 +1,195 @@
-vim.g.encoding = "utf-8"
-vim.g.fileencoding = "utf-8"
-vim.g.termencoding = "utf-8"
-
+-- Set leader BEFORE anything else (prevents plugins from using default \)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-vim.opt.termguicolors = true
-vim.opt.mouse = "a"
+local options = {
+  -- Interface
+  termguicolors = true,
+  mouse = "a",
+  number = true,
+  relativenumber = true,
+  numberwidth = 2,
+  signcolumn = "auto",
+  showmode = false,
+  laststatus = 0,
+  modeline = false,
+  cmdheight = 1,
+  cursorline = true,
+  winborder = "rounded",
 
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.numberwidth = 2
-vim.opt.signcolumn = "auto"
+  -- Behavior
+  hlsearch = true,
+  ignorecase = true,
+  smartcase = true,
+  gdefault = true,
+  wrap = false,
+  scrolloff = 8,
+  sidescrolloff = 8,
+  undofile = true,
+  completeopt = { "fuzzy", "menu", "menuone", "popup", "noinsert", "preview" },
 
-vim.opt.showmode = false
-vim.opt.laststatus = 0
-vim.opt.showmode = false
-vim.opt.modeline = false
+  -- Tabs & Indent
+  tabstop = 2,
+  shiftwidth = 2,
+  expandtab = true,
+  autoindent = true,
 
-vim.opt.cursorline = true
+  -- Visuals
+  list = true,
+  showmatch = true,
+}
 
-vim.opt.hlsearch = true
-vim.opt.list = true
+for k, v in pairs(options) do vim.opt[k] = v end
 
-vim.opt.autoindent = true
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
 vim.cmd.filetype("plugin indent on")
 
-vim.opt.wrap = false
-vim.opt.sidescrolloff = 8
-vim.opt.scrolloff = 8
+-- a simple helper to avoid repetition
+local function add(urls, opts)
+  opts = opts or {}
+  local plugins = type(urls) == "table" and urls or { urls }
+  vim.pack.add(plugins, vim.tbl_extend("force", { confirm = false }, opts))
+end
 
-vim.opt.spelllang = "en_gb"
+-- UI & Icons
+add("https://github.com/nvim-lua/plenary.nvim")
+add("https://github.com/nvim-tree/nvim-web-devicons")
+add("https://github.com/lukas-reineke/indent-blankline.nvim")
 
-vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
-vim.opt.undofile = true
+-- Themes
+add("https://github.com/folke/tokyonight.nvim")
+add("https://github.com/catppuccin/nvim", { load = false })
+add("https://github.com/ellisonleao/gruvbox.nvim", { load = false })
 
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.expandtab = true
+-- markdown support for LLMs
+add("https://github.com/MeanderingProgrammer/render-markdown.nvim")
+add("https://github.com/OXY2DEV/markview.nvim")
 
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.gdefault = true
+-- Treesitter & Languages
+add("https://github.com/nvim-treesitter/nvim-treesitter", { version = 'main' })
+add("https://github.com/nvim-treesitter/nvim-treesitter-textobjects", { version = 'main'} )
+add("https://github.com/folke/ts-comments.nvim")
+add("https://github.com/windwp/nvim-ts-autotag")
 
-vim.lsp.inlay_hint.enable(true)
+-- LSP & Tools
+add("https://github.com/neovim/nvim-lspconfig")
+add("https://github.com/stevearc/conform.nvim")
+add("https://github.com/mfussenegger/nvim-lint")
+add("https://github.com/saghen/blink.cmp")
+add("https://github.com/j-hui/fidget.nvim")
+add("https://github.com/rachartier/tiny-inline-diagnostic.nvim")
+add("https://github.com/lewis6991/gitsigns.nvim")
+add("https://github.com/ibhagwan/fzf-lua")
 
-vim.opt.autocomplete = true
-vim.opt.completeopt = { "fuzzy", "menuone", "popup", "noinsert", "preview" }
-vim.opt.winborder = "rounded"
+-- Mini Modules (Grouped)
+add({
+  "https://github.com/nvim-mini/mini.basics",
+  "https://github.com/nvim-mini/mini.ai",
+  "https://github.com/nvim-mini/mini.pairs",
+  "https://github.com/nvim-mini/mini.hipatterns",
+  "https://github.com/nvim-mini/mini.completion",
+  "https://github.com/nvim-mini/mini.doc",
+  "https://github.com/nvim-mini/mini.snippets",
+  "https://github.com/nvim-mini/mini.pick",
+}, { load = true })
 
-vim.pack.add({
-  "https://github.com/nvim-lua/plenary.nvim",
-}, { load = true, confirm = false })
+-- Workflow & AI
+add("https://github.com/folke/flash.nvim")
+add("https://github.com/folke/which-key.nvim")
+add("https://github.com/zbirenbaum/copilot.lua")
+add("https://github.com/CopilotC-Nvim/CopilotChat.nvim")
+add("https://github.com/m4xshen/hardtime.nvim")
 
-vim.pack.add({
-  "https://github.com/nvim-tree/nvim-web-devicons",
-}, { load = true, confirm = false })
-require("nvim-web-devicons").setup()
+-- Language Specific Extras
+add("https://github.com/tarides/ocaml.nvim")
+add("https://github.com/ionide/Ionide-vim")
+add("https://github.com/mrcjkb/rustaceanvim")
+add("https://github.com/Saecki/crates.nvim")
 
--- vim.pack.add({ "https://github.com/MunifTanjim/nui.nvim", }, { load = false, confirm = false })
-
-vim.pack.add(
-  { "https://github.com/lukas-reineke/indent-blankline.nvim.git" },
-  { confirm = false }
-)
-require("ibl").setup({})
-
--- tree-sitter first
-vim.pack.add({
-  {
-    src = "https://github.com/nvim-treesitter/nvim-treesitter",
-    version = "main",
-  },
-}, { load = true, confirm = false })
-
-vim.pack.add({
-  {
-    src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
-    version = "main",
-  },
-}, { load = true, confirm = false })
-
+-- Treesitter
 require("nvim-treesitter").setup({
-  textobjects = {
-    select = {
-      enable = true,
-      lookahead = true,
-      include_surrounding_whitespace = true,
-    },
-  },
-  sync_install = false,
-  auto_install = true,
-  indent = { enable = true },
+  ensure_installed = { "sh", "lua", "ocaml", "fsharp", "rust", "cpp", "python", "scala", "haskell" },
   highlight = { enable = true },
-  folds = { enable = true },
-})
-require("nvim-treesitter").install({ "sh", "rust", "c++", "python", "lua" })
-require("nvim-treesitter.install").update("all")
-
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-vim.opt.foldlevel = 99
-
-vim.pack.add(
-  { "https://github.com/folke/ts-comments.nvim" },
-  { load = true, confirm = false }
-)
-
-vim.pack.add(
-  { "https://github.com/windwp/nvim-ts-autotag" },
-  { load = true, confirm = false }
-)
-require("nvim-ts-autotag").setup({
-  opts = {
-    -- Defaults
-    enable_close = true, -- Auto close tags
-    enable_rename = true, -- Auto rename pairs of tags
-    enable_close_on_slash = false, -- Auto close on trailing </
+  indent = { enable = true },
+  auto_install = true,
+  textobjects = {
+    select = { enable = true, lookahead = true, include_surrounding_whitespace = true },
   },
 })
+vim.opt.foldmethod, vim.opt.foldexpr, vim.opt.foldlevel = "expr", "nvim_treesitter#foldexpr()", 99
 
--- selected mini plugins
-vim.pack.add({
-  "https://github.com/nvim-mini/mini.basics.git",
-  "https://github.com/nvim-mini/mini.ai.git",
-  "https://github.com/nvim-mini/mini.pairs.git",
-  "https://github.com/nvim-mini/mini.hipatterns.git",
-  "https://github.com/nvim-mini/mini.completion.git",
-  "https://github.com/nvim-mini/mini.doc.git",
-  "https://github.com/nvim-mini/mini.snippets.git",
-  "https://github.com/nvim-mini/mini.pick.git",
-}, { load = true, confirm = false })
-
-require("mini.basics").setup({})
-require("mini.pairs").setup({})
-require("mini.ai").setup({})
-require("mini.hipatterns").setup({})
-require("mini.completion").setup({})
-require("mini.doc").setup({})
-require("mini.pick").setup({})
-
-vim.pack.add({
-  "https://github.com/folke/tokyonight.nvim",
-}, { load = true, confirm = false })
-
-require("tokyonight").setup({
-  style = "moon",
-  terminal_colors = true,
-  transparent = true,
-})
-
-vim.pack.add({
-  "https://github.com/ellisonleao/gruvbox.nvim",
-}, { load = false, confirm = false })
-
-vim.pack.add({ "https://github.com/catppuccin/nvim" }, { confirm = false })
-
-vim.pack.add({
-  { src = "https://github.com/lewis6991/gitsigns.nvim" },
-})
+-- UI Modules
+require("nvim-web-devicons").setup()
+require("ibl").setup({})
 require("gitsigns").setup({ signcolumn = false })
+require("fidget").setup({})
 
--- linting
-vim.pack.add(
-  { "https://github.com/mfussenegger/nvim-lint" },
-  { confirm = false }
-)
-require("lint").linters_by_ft = {
-  sh = { "shellcheck" },
-  fish = { "fish" },
-  lua = { "selene" },
-}
-vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-  callback = function()
-    require("lint").try_lint()
-  end,
-})
+-- proper diagnostics
+require("tiny-inline-diagnostic").setup({ preset = "simple" })
 
--- testing
-vim.pack.add(
-  { "https://github.com/antoinemadec/FixCursorHold.nvim" },
-  { load = true, confirm = false }
-)
-vim.pack.add(
-  { "https://github.com/nvim-neotest/nvim-nio" },
-  { load = false, confirm = false }
-)
-vim.pack.add({
-  "https://github.com/nvim-neotest/neotest",
-  "https://github.com/nvim-neotest/neotest-plenary",
-  "https://github.com/nvim-neotest/neotest-python",
-  "https://github.com/rouge8/neotest-rust",
-  "https://github.com/alfaix/neotest-gtest",
-  "https://github.com/mrcjkb/neotest-haskell",
-  "https://github.com/stevanmilic/neotest-scala",
-}, { load = false, confirm = false })
-require("neotest").setup({
-  adapters = {
-    require("neotest-plenary"),
-    require("neotest-rust"),
-    require("neotest-python"),
-    require("neotest-gtest").setup({}),
-    require("neotest-scala")({
-      -- Command line arguments for runner
-      -- Can also be a function to return dynamic values
-      args = { "--no-color" },
-      -- Possibly values bloop|sbt.
-      runner = "bloop",
-      -- Possibly values utest|munit|scalatest.
-      framework = "scalatest",
-    }),
-  },
-})
+-- Themes
+require("tokyonight").setup({ style = "moon", transparent = true })
+vim.cmd.colorscheme("tokyonight")
 
-vim.pack.add({
-  { src = "https://github.com/ibhagwan/fzf-lua" },
-})
-require("fzf-lua").setup({})
+-- Mini.nvim
+local mini_modules = { "basics", "ai", "pairs", "hipatterns", "completion", "doc", "pick" }
+for _, mod in ipairs(mini_modules) do require("mini." .. mod).setup({}) end
 
--- lspconfig
-vim.pack.add(
-  { "https://github.com/neovim/nvim-lspconfig" },
-  { confirm = false }
-)
+-- mardown support
+require("markview").setup({ preview = { filetypes = { "markdown", "codecompanion" } } })
+require('render-markdown').setup({})
 
+-- LSP Config & Diagnostics
 vim.diagnostic.config({
   underline = true,
   severity_sort = true,
-  update_in_insert = false, -- less flicker
-  float = {
-    border = "rounded",
-    source = true,
-  },
+  update_in_insert = false,
+  float = { border = "rounded", source = true },
   virtual_text = false,
-  --virtual_text = { source = "if_many" }
-  inlay_hints = { enabled = true },
-  folds = { enabled = true },
 })
 
-vim.pack.add({ "https://github.com/j-hui/fidget.nvim" }, { confirm = false })
-require("fidget").setup({})
-
-vim.pack.add(
-  { "https://github.com/rachartier/tiny-inline-diagnostic.nvim" },
-  { confirm = false }
-)
-require("tiny-inline-diagnostic").setup({
-  preset = "simple",
-})
-
--- Lua first
-vim.lsp.config["lua_ls"] = {
-  cmd = { "lua-language-server" },
-  settings = {
-    Lua = {
-      runtime = { version = "LuaJIT" },
-      diagnostics = {
-        globals = { "vim" },
-      },
-      workspace = {
-        checkThirdParty = false,
-        library = vim.api.nvim_get_runtime_file("", true),
-      },
-      codeLens = { enabled = true },
-    },
-  },
-}
-
-vim.lsp.enable("lua_ls")
-
-vim.lsp.enable("bashls")
-
--- blink
-vim.pack.add({ "https://github.com/saghen/blink.cmp" }, { confirm = false })
+-- Blink Completion
 require("blink.cmp").setup({
-  appearance = {
-    use_nvim_cmp_as_default = true,
-    nerd_font_variant = "normal",
-  },
-  sources = {
-    default = { "lsp", "snippets", "buffer" },
-  },
-  signature = {
-    enabled = true,
-    window = {
-      border = "rounded",
-    },
-  },
-  completion = { documentation = { auto_show = true } },
   fuzzy = { implementation = "lua" },
+  appearance = { use_nvim_cmp_as_default = true },
+  sources = { default = { "lsp", "snippets", "buffer" } },
+  completion = { documentation = { auto_show = true } },
+  signature = { enabled = true, window = { border = "rounded" } },
 })
 
--- conform
-vim.pack.add(
-  { "https://github.com/stevearc/conform.nvim" },
-  { confirm = false }
-)
+-- Formatter & Linter
 require("conform").setup({
   default_format_opts = { lsp_format = "fallback" },
   formatters_by_ft = {
     sh = { "shfmt" },
     lua = { "stylua" },
     python = { "ruff" },
-    rust = { "rustfmt", lsp_format = "fallback" },
-    javascript = { "prettierd", "prettier", stop_after_first = true },
+    rust = { "rustfmt" },
+    javascript = { "prettierd", stop_after_first = true },
   },
-  formatters = { injected = { options = { ignore_errors = true } } },
 })
 
--- Python
-vim.lsp.enable("pyright")
+require("lint").linters_by_ft = { sh = { "shellcheck" }, lua = { "selene" } }
+vim.api.nvim_create_autocmd("BufWritePost", { callback = function() require("lint").try_lint() end })
 
--- Rust
-vim.pack.add({ "https://github.com/mrcjkb/rustaceanvim" }, { confirm = false })
-vim.lsp.config["rust_analyzer"] = {
-  settings = {
-    codeLens = { enabled = true },
-  },
+-- LSP Servers (0.12 optimized)
+local servers = { "bashls", "pyright", "ccls", "ocamllsp", "fsautocomplete", "copilot" }
+for _, srv in ipairs(servers) do vim.lsp.enable(srv) end
+
+vim.lsp.config["lua_ls"] = {
+  settings = { Lua = { diagnostics = { globals = { "vim" } }, workspace = { checkThirdParty = false } } }
 }
+vim.lsp.enable("lua_ls")
 
+vim.lsp.config["rust_analyzer"] = { settings = { codeLens = { enabled = true } } }
 vim.lsp.enable("rust_analyzer")
 
-vim.pack.add(
-  { "https://github.com/Saecki/crates.nvim.git" },
-  { confirm = false }
-)
 require("crates").setup({})
 
--- copilot
-vim.pack.add(
-  { "https://github.com/CopilotC-Nvim/CopilotChat.nvim" },
-  { load = true, confirm = false }
-)
-require("CopilotChat").setup()
-
-vim.pack.add(
-  { "https://github.com/zbirenbaum/copilot.lua.git" },
-  { load = true, confirm = false }
-)
+require("fzf-lua").setup({})
 require("copilot").setup({})
-
-vim.lsp.enable("copilot")
-
--- companion
-vim.pack.add(
-  { "https://github.com/olimorris/codecompanion.nvim.git" },
-  { confirm = false }
-)
-
-vim.pack.add(
-  { "https://github.com/OXY2DEV/markview.nvim" },
-  { confirm = false }
-)
-require("markview").setup({
-  preview = {
-    filetypes = { "markdown", "codecomanion" },
-    ignore_buftypes = {},
-  },
-})
-
-vim.pack.add({ "https://github.com/folke/flash.nvim" }, { confirm = false })
-
--- hardtime
-vim.pack.add(
-  { "https://github.com/m4xshen/hardtime.nvim" },
-  { confirm = false }
-)
+require("CopilotChat").setup()
 require("hardtime").setup({})
-
--- probably has to be loaded last (to catch all the key bindings)
-vim.pack.add({ "https://github.com/folke/which-key.nvim" }, { confirm = false })
 require("which-key").setup({})
 
-vim.cmd.colorscheme("tokyonight")
-
--- vim.pack.update()
