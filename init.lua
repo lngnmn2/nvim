@@ -102,6 +102,7 @@ add("https://github.com/CopilotC-Nvim/CopilotChat.nvim")
 add("https://github.com/m4xshen/hardtime.nvim")
 
 -- Language Specific Extras
+add("https://github.com/neovimhaskell/haskell-vim")
 add("https://github.com/tarides/ocaml.nvim")
 add("https://github.com/ionide/Ionide-vim")
 add("https://github.com/mrcjkb/rustaceanvim")
@@ -150,8 +151,6 @@ vim.diagnostic.config({
   inlay_hint = true,
 })
 
-vim.lsp.inlay_hint.enable(true)
-
 -- Blink Completion
 require("blink.cmp").setup({
   fuzzy = { implementation = "lua" },
@@ -182,6 +181,8 @@ vim.api.nvim_create_autocmd("BufWritePost", { callback = function() require("lin
 local servers = { "bashls", "pyright", "ccls", "ocamllsp", "fsautocomplete", "copilot" }
 for _, srv in ipairs(servers) do vim.lsp.enable(srv) end
 
+vim.lsp.inlay_hint.enable(true)
+
 vim.lsp.config["lua_ls"] = {
   settings = { Lua = {
     diagnostics = { globals = { "vim" } },
@@ -197,6 +198,9 @@ vim.lsp.config["rust_analyzer"] = { settings = { codelens = { enabled = true } }
 vim.lsp.enable("rust_analyzer")
 
 require("crates").setup({})
+vim.lsp.enable("hls")
+
+vim.lsp.config["hls"] = { settings = { codelens = { enabled = true } } }
 
 require("fzf-lua").setup({})
 require("copilot").setup({})
