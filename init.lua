@@ -147,7 +147,10 @@ vim.diagnostic.config({
   update_in_insert = false,
   float = { border = "rounded", source = true },
   virtual_text = false,
+  inlay_hint = true,
 })
+
+vim.lsp.inlay_hint.enable(true)
 
 -- Blink Completion
 require("blink.cmp").setup({
@@ -180,11 +183,17 @@ local servers = { "bashls", "pyright", "ccls", "ocamllsp", "fsautocomplete", "co
 for _, srv in ipairs(servers) do vim.lsp.enable(srv) end
 
 vim.lsp.config["lua_ls"] = {
-  settings = { Lua = { diagnostics = { globals = { "vim" } }, workspace = { checkThirdParty = false } } }
+  settings = { Lua = {
+    diagnostics = { globals = { "vim" } },
+    workspace = {
+      checkThirdParty = false,
+      library = vim.api.nvim_get_runtime_file("", true),
+  } },
+    codelens = { enabled = true } }
 }
 vim.lsp.enable("lua_ls")
 
-vim.lsp.config["rust_analyzer"] = { settings = { codeLens = { enabled = true } } }
+vim.lsp.config["rust_analyzer"] = { settings = { codelens = { enabled = true } } }
 vim.lsp.enable("rust_analyzer")
 
 require("crates").setup({})
