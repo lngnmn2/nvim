@@ -64,7 +64,6 @@ add("https://github.com/ellisonleao/gruvbox.nvim", { load = false })
 
 -- markdown support for LLMs
 add("https://github.com/MeanderingProgrammer/render-markdown.nvim")
-add("https://github.com/OXY2DEV/markview.nvim")
 
 -- Treesitter & Languages
 add("https://github.com/nvim-treesitter/nvim-treesitter", { version = 'main' })
@@ -90,6 +89,7 @@ add({
   "https://github.com/nvim-mini/mini.hipatterns",
   "https://github.com/nvim-mini/mini.completion",
   "https://github.com/nvim-mini/mini.doc",
+  "https://github.com/nvim-mini/mini.icons",
   "https://github.com/nvim-mini/mini.snippets",
   "https://github.com/nvim-mini/mini.pick",
 }, { load = true })
@@ -129,17 +129,29 @@ require("fidget").setup({})
 -- proper diagnostics
 require("tiny-inline-diagnostic").setup({ preset = "simple" })
 
--- Themes
-require("tokyonight").setup({ style = "moon", transparent = true })
-vim.cmd.colorscheme("tokyonight")
-
 -- Mini.nvim
 local mini_modules = { "basics", "ai", "pairs", "hipatterns", "completion", "doc", "pick" }
 for _, mod in ipairs(mini_modules) do require("mini." .. mod).setup({}) end
 
 -- mardown support
-require("markview").setup({ preview = { filetypes = { "markdown", "codecompanion" } } })
-require('render-markdown').setup({})
+require('render-markdown').setup({
+  ft = { "markdown", "codecompanion" },
+  preset = 'lazy',
+  code = {
+    enabled = true,
+    sign = false,
+    width = "block",
+    right_pad = 1
+  },
+  heading = {
+    sign = false,
+  },
+  checkbox = {
+    enabled = false,
+  },
+  restart_highlighter = true,
+  completions = { lsp = { enabled = true } },
+})
 
 -- LSP Config & Diagnostics
 vim.diagnostic.config({
@@ -207,4 +219,8 @@ require("copilot").setup({})
 require("CopilotChat").setup()
 require("hardtime").setup({})
 require("which-key").setup({})
+
+-- Themes
+require("tokyonight").setup({ style = "moon", transparent = true })
+vim.cmd.colorscheme("tokyonight")
 
