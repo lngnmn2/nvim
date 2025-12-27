@@ -166,6 +166,8 @@ require("conform").setup({
     lua = { "stylua" },
     python = { "ruff" },
     rust = { "rustfmt" },
+    ocaml = { "ocamlformat" },
+    fsharp = { "fantomas" },
     javascript = { "prettierd", stop_after_first = true },
   },
 })
