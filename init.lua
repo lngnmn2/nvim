@@ -2,6 +2,8 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+vim.cmd[[ set path+=** ]]
+
 local options = {
   -- Interface
   termguicolors = true,
@@ -10,6 +12,7 @@ local options = {
   relativenumber = true,
   numberwidth = 2,
   signcolumn = "auto",
+  showcmd = true,
   showmode = false,
   laststatus = 0,
   modeline = false,
@@ -26,6 +29,12 @@ local options = {
   scrolloff = 8,
   sidescrolloff = 8,
   undofile = true,
+
+  spell=true,
+
+  wildmenu = true,
+
+  complete = ".,w,b,u,t,i,spell",
   completeopt = { "fuzzy", "menu", "menuone", "popup", "noinsert", "preview" },
 
   -- Tabs & Indent
@@ -43,6 +52,7 @@ for k, v in pairs(options) do vim.opt[k] = v end
 
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
+
 vim.cmd.filetype("plugin indent on")
 
 -- a simple helper to avoid repetition
@@ -72,6 +82,7 @@ add("https://github.com/folke/ts-comments.nvim")
 add("https://github.com/windwp/nvim-ts-autotag")
 
 -- LSP & Tools
+add("https://github.com/rafamadriz/friendly-snippets.git")
 add("https://github.com/neovim/nvim-lspconfig")
 add("https://github.com/stevearc/conform.nvim")
 add("https://github.com/mfussenegger/nvim-lint")
@@ -79,6 +90,7 @@ add("https://github.com/saghen/blink.cmp")
 add("https://github.com/j-hui/fidget.nvim")
 add("https://github.com/rachartier/tiny-inline-diagnostic.nvim")
 add("https://github.com/lewis6991/gitsigns.nvim")
+add("https://github.com/RRethy/vim-illuminate")
 add("https://github.com/ibhagwan/fzf-lua")
 
 -- Mini Modules (Grouped)
@@ -106,11 +118,36 @@ add("https://github.com/neovimhaskell/haskell-vim")
 add("https://github.com/tarides/ocaml.nvim")
 add("https://github.com/ionide/Ionide-vim")
 add("https://github.com/mrcjkb/rustaceanvim")
+add("https://github.com/cordx56/rustowl")
 add("https://github.com/Saecki/crates.nvim")
+
+-- Testing
+add("https://github.com/antoinemadec/FixCursorHold.nvim")
+add("https://github.com/nvim-neotest/nvim-nio")
+add("https://github.com/nvim-neotest/neotest")
+add("https://github.com/nvim-neotest/neotest-plenary")
+add("https://github.com/nvim-neotest/neotest-python")
+add("https://github.com/rouge8/neotest-rust")
+add("https://github.com/alfaix/neotest-gtest")
+add("https://github.com/stevanmilic/neotest-scala")
+add("https://github.com/mrcjkb/neotest-haskell")
+add("https://github.com/nvim-neotest/neotest-vim-test")
 
 -- Treesitter
 require("nvim-treesitter").setup({
-  ensure_installed = { "sh", "lua", "ocaml", "fsharp", "rust", "cpp", "python", "scala", "haskell" },
+-- a kludge
+  condig = function()
+  local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+  parser_config.org = {
+  install_info = {
+    url = 'https://github.com/milisims/tree-sitter-org',
+    revision = 'main',
+    files = { 'src/parser.c', 'src/scanner.c' },
+  },
+    filetype = 'org',
+  }
+end,
+  ensure_installed = { "org", "markdown", "toml", "json", "sh", "lua", "ocaml", "fsharp", "rust", "cpp", "python", "scala", "haskell" },
   highlight = { enable = true },
   indent = { enable = true },
   auto_install = true,
@@ -130,12 +167,12 @@ require("fidget").setup({})
 require("tiny-inline-diagnostic").setup({ preset = "simple" })
 
 -- Mini.nvim
-local mini_modules = { "basics", "ai", "pairs", "hipatterns", "completion", "doc", "pick" }
+local mini_modules = { "basics", "icons", "ai", "pairs", "hipatterns", "completion", "doc", "snippets", "pick" }
 for _, mod in ipairs(mini_modules) do require("mini." .. mod).setup({}) end
 
 -- mardown support
 require('render-markdown').setup({
-  ft = { "markdown", "codecompanion" },
+  -- ft = { "markdown", "codecompanion" },
   preset = 'lazy',
   code = {
     enabled = true,
@@ -165,13 +202,32 @@ vim.diagnostic.config({
 
 -- Blink Completion
 require("blink.cmp").setup({
+  snippets = { preset = "mini_snippets" },
   fuzzy = { implementation = "lua" },
   appearance = { use_nvim_cmp_as_default = true },
-  sources = { default = { "lsp", "snippets", "buffer" } },
+  sources = { default = { "lsp", "snippets", "omni", "buffer" } },
   completion = { documentation = { auto_show = true } },
   signature = { enabled = true, window = { border = "rounded" } },
 })
 
+-- Testing
+require("neotest").setup({
+  adapters = {
+    require("neotest-plenary"),
+    require("neotest-python"),
+    require("neotest-rust"),
+    require("neotest-gtest").setup({}),
+    require("neotest-scala")({
+      args = "--no-color",
+      runner = "bloop",
+      framework = "scalatest",
+    }),
+    require("neotest-haskell"),
+    require("neotest-vim-test")({
+      ignore_file_types = { "python", "vim", "lua" },
+    }),
+  },
+})
 -- Formatter & Linter
 require("conform").setup({
   default_format_opts = { lsp_format = "fallback" },
@@ -211,6 +267,7 @@ vim.lsp.enable("rust_analyzer")
 
 require("crates").setup({})
 vim.lsp.enable("hls")
+require('rustowl').setup()
 
 vim.lsp.config["hls"] = { settings = { codelens = { enabled = true } } }
 
