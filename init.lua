@@ -2,7 +2,8 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-vim.cmd[[ set path+=** ]]
+-- bad idea unless nvum starts in a project directory
+-- vim.cmd[[ set path+=** ]]
 
 local options = {
   -- Interface
@@ -12,7 +13,6 @@ local options = {
   relativenumber = true,
   numberwidth = 2,
   signcolumn = "auto",
-  showcmd = true,
   showmode = false,
   laststatus = 0,
   modeline = false,
@@ -21,6 +21,7 @@ local options = {
   winborder = "rounded",
 
   -- Behavior
+  incsearch = true,
   hlsearch = true,
   ignorecase = true,
   smartcase = true,
@@ -30,12 +31,11 @@ local options = {
   sidescrolloff = 8,
   undofile = true,
 
-  spell=true,
+  spell=false, -- not in prog modes
 
   wildmenu = true,
-
   complete = ".,w,b,u,t,i,spell",
-  completeopt = { "fuzzy", "menu", "menuone", "popup", "noinsert", "preview" },
+  completeopt = { "menu", "menuone", "popup", "noinsert", "preview" },
 
   -- Tabs & Indent
   tabstop = 2,
@@ -45,6 +45,7 @@ local options = {
 
   -- Visuals
   list = true,
+  showcmd = true,
   showmatch = true,
 }
 
@@ -75,14 +76,20 @@ add("https://github.com/ellisonleao/gruvbox.nvim", { load = false })
 -- markdown support for LLMs
 add("https://github.com/MeanderingProgrammer/render-markdown.nvim")
 
+-- basic LaTeX support
+add("https://github.com/lervag/vimtex")
+
 -- Treesitter & Languages
 add("https://github.com/nvim-treesitter/nvim-treesitter", { version = 'main' })
 add("https://github.com/nvim-treesitter/nvim-treesitter-textobjects", { version = 'main'} )
 add("https://github.com/folke/ts-comments.nvim")
 add("https://github.com/windwp/nvim-ts-autotag")
 
--- LSP & Tools
+-- snippets (to be used with mini-snippets)
+add("https://github.com/honza/vim-snippets")
 add("https://github.com/rafamadriz/friendly-snippets.git")
+
+-- LSP & Tools
 add("https://github.com/neovim/nvim-lspconfig")
 add("https://github.com/stevearc/conform.nvim")
 add("https://github.com/mfussenegger/nvim-lint")
@@ -147,7 +154,7 @@ require("nvim-treesitter").setup({
     filetype = 'org',
   }
 end,
-  ensure_installed = { "org", "markdown", "toml", "json", "sh", "lua", "ocaml", "fsharp", "rust", "cpp", "python", "scala", "haskell" },
+  ensure_installed = { "org", "markdown", "toml", "json", "bash", "make", "lua", "ocaml", "fsharp", "rust", "c", "cmake", "cpp", "python", "scala", "haskell" },
   highlight = { enable = true },
   indent = { enable = true },
   auto_install = true,
@@ -189,6 +196,9 @@ require('render-markdown').setup({
   restart_highlighter = true,
   completions = { lsp = { enabled = true } },
 })
+
+-- LaTeX
+vim.lsp.enable("texlab")
 
 -- LSP Config & Diagnostics
 vim.diagnostic.config({
