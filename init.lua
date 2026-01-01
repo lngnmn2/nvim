@@ -107,6 +107,7 @@ add({
   "https://github.com/nvim-mini/mini.pairs",
   "https://github.com/nvim-mini/mini.hipatterns",
   "https://github.com/nvim-mini/mini.completion",
+  "https://github.com/nvim-mini/mini.diff",
   "https://github.com/nvim-mini/mini.doc",
   "https://github.com/nvim-mini/mini.icons",
   "https://github.com/nvim-mini/mini.snippets",
@@ -118,6 +119,7 @@ add("https://github.com/folke/flash.nvim")
 add("https://github.com/folke/which-key.nvim")
 add("https://github.com/zbirenbaum/copilot.lua")
 add("https://github.com/CopilotC-Nvim/CopilotChat.nvim")
+add("https://github.com/olimorris/codecompanion.nvim")
 add("https://github.com/m4xshen/hardtime.nvim")
 
 -- Language Specific Extras
@@ -174,8 +176,18 @@ require("fidget").setup({})
 require("tiny-inline-diagnostic").setup({ preset = "simple" })
 
 -- Mini.nvim
-local mini_modules = { "basics", "icons", "ai", "pairs", "hipatterns", "completion", "doc", "snippets", "pick" }
+local mini_modules = { "basics", "icons", "ai", "pairs", "hipatterns", "completion", "diff", "doc", "snippets", "pick" }
 for _, mod in ipairs(mini_modules) do require("mini." .. mod).setup({}) end
+
+-- where to find snippets
+local gen_loader = require('mini.snippets').gen_loader
+require('mini.snippets').setup({
+  snippets = {
+    -- Load snippets based on current language by reading files from
+    -- "snippets/" subdirectories from 'runtimepath' directories.
+    gen_loader.from_lang(),
+  },
+})
 
 -- mardown support
 require('render-markdown').setup({
@@ -286,6 +298,23 @@ require("copilot").setup({})
 require("CopilotChat").setup()
 require("hardtime").setup({})
 require("which-key").setup({})
+
+-- AI
+require("codecompanion").setup({
+  interactions = {
+    chat = {
+      adapter = "copilot",
+      model = "gemini-3-pro",
+    },
+    inline = {
+      adapter = "copilot",
+    },
+    cmd = {
+      adapter = "gemini",
+      model = "gemini-3-pro",
+    }
+  },
+})
 
 -- Themes
 require("tokyonight").setup({ style = "moon", transparent = true })
