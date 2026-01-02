@@ -115,12 +115,13 @@ add({
 }, { load = true })
 
 -- Workflow & AI
+add("https://github.com/m4xshen/hardtime.nvim")
 add("https://github.com/folke/flash.nvim")
 add("https://github.com/folke/which-key.nvim")
 add("https://github.com/zbirenbaum/copilot.lua")
 add("https://github.com/CopilotC-Nvim/CopilotChat.nvim")
+add("https://github.com/kdheepak/panvimdoc")
 add("https://github.com/olimorris/codecompanion.nvim")
-add("https://github.com/m4xshen/hardtime.nvim")
 
 -- Language Specific Extras
 add("https://github.com/neovimhaskell/haskell-vim")
@@ -209,6 +210,13 @@ require('render-markdown').setup({
   completions = { lsp = { enabled = true } },
 })
 
+-- a kludge
+vim.lsp.config('*', { capabilities = {
+  offsetEncoding =  'utf-16',
+  general = {
+      positionEncodings = { 'utf-16' },
+  },},})
+
 -- LaTeX
 vim.lsp.enable("texlab")
 
@@ -227,7 +235,8 @@ require("blink.cmp").setup({
   snippets = { preset = "mini_snippets" },
   fuzzy = { implementation = "lua" },
   appearance = { use_nvim_cmp_as_default = true },
-  sources = { default = { "lsp", "snippets", "omni", "buffer" } },
+  cmdline = { sources = { "cmdline" } },
+  sources = { default = { "lsp", "buffer", "omni", "codecompanion","snippets",} },
   completion = { documentation = { auto_show = true } },
   signature = { enabled = true, window = { border = "rounded" } },
 })
@@ -304,7 +313,6 @@ require("codecompanion").setup({
   interactions = {
     chat = {
       adapter = "copilot",
-      model = "gemini-3-pro",
     },
     inline = {
       adapter = "copilot",
