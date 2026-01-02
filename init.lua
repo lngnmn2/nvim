@@ -216,6 +216,8 @@ vim.lsp.config('*', { capabilities = {
       positionEncodings = { 'utf-8' },
   },},})
 
+vim.lsp.enable("markdown_oxide")
+
 -- LaTeX
 vim.lsp.enable("texlab")
 
