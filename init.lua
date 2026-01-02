@@ -123,9 +123,13 @@ add({
 add("https://github.com/m4xshen/hardtime.nvim")
 add("https://github.com/folke/flash.nvim")
 add("https://github.com/folke/which-key.nvim")
+
+-- Copilot (without mason)
+add("https://github.com/copilotlsp-nvim/copilot-lsp")
 add("https://github.com/zbirenbaum/copilot.lua")
-add("https://github.com/CopilotC-Nvim/CopilotChat.nvim")
+-- add("https://github.com/CopilotC-Nvim/CopilotChat.nvim")
 add("https://github.com/fang2hou/blink-copilot")
+
 add("https://github.com/kdheepak/panvimdoc")
 add("https://github.com/olimorris/codecompanion.nvim")
 
@@ -241,12 +245,15 @@ vim.diagnostic.config({
   inlay_hint = true,
 })
 
--- Blink Completionre
+-- Copilot first
+require('copilot-lsp').setup({})
+require("copilot").setup({})
 require('blink-copilot').setup({})
 
+-- Blink Completion
 require("blink.cmp").setup({
   sources = {
-     default = { "lsp", "copilot", "buffer", "omni", "codecompanion", "snippets" },
+     default = { "lsp", "buffer", "omni", "copilot", "codecompanion", "snippets" },
      providers = {
         copilot = {
           name = "copilot",
@@ -257,7 +264,7 @@ require("blink.cmp").setup({
   },
   snippets = { preset = "mini_snippets" },
   fuzzy = { implementation = "lua" },
-  appearance = { use_nvim_cmp_as_default = true },
+  appearance = { use_nvim_cmp_as_default = false },
   cmdline = { sources = { "cmdline" } },
   completion = { documentation = { auto_show = true } },
   signature = { enabled = true, window = { border = "rounded" } },
@@ -325,8 +332,8 @@ require('rustowl').setup()
 vim.lsp.config["hls"] = { settings = { codelens = { enabled = true } } }
 
 require("fzf-lua").setup({})
-require("copilot").setup({})
-require("CopilotChat").setup()
+-- require("copilot").setup({})
+-- require("CopilotChat").setup()
 require("hardtime").setup({})
 require("which-key").setup({})
 
