@@ -212,9 +212,9 @@ require('render-markdown').setup({
 
 -- a kludge
 vim.lsp.config('*', { capabilities = {
-  offsetEncoding =  'utf-16',
+  -- offsetEncoding =  'utf-8',
   general = {
-      positionEncodings = { 'utf-16' },
+      positionEncodings = { 'utf-8' },
   },},})
 
 -- LaTeX
