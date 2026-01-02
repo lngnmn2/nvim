@@ -6,6 +6,11 @@ vim.g.maplocalleader = " "
 -- vim.cmd[[ set path+=** ]]
 
 local options = {
+  -- encodings
+  encoding='utf-8',
+  fileencoding = 'utf-8',
+  fileencodings = { 'utf-8', 'latin1' },
+ 
   -- Interface
   termguicolors = true,
   mouse = "a",
@@ -211,9 +216,13 @@ require('render-markdown').setup({
 })
 
 -- a kludge
+vim.opt.encoding='utf-8'
+vim.opt.fileencoding = 'utf-8'
+vim.opt.fileencodings = { 'utf-8', 'latin1' }
+
 vim.lsp.config('*', { capabilities = {
   general = {
-      positionEncodings = { 'utf-8' },
+      positionEncodings = { 'utf8', 'utf-16' }, -- the prefered order
   },},})
 
 vim.lsp.enable("markdown_oxide")
