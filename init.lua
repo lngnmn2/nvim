@@ -10,7 +10,7 @@ local options = {
   encoding='utf-8',
   fileencoding = 'utf-8',
   fileencodings = { 'utf-8', 'latin1' },
- 
+
   -- Interface
   termguicolors = true,
   mouse = "a",
@@ -82,7 +82,7 @@ add("https://github.com/ellisonleao/gruvbox.nvim", { load = false })
 add("https://github.com/MeanderingProgrammer/render-markdown.nvim")
 
 -- basic LaTeX support
-add("https://github.com/lervag/vimtex")
+add("https://github.com/lervag/vimtex") -- a filetype plugin
 
 -- Treesitter & Languages
 add("https://github.com/nvim-treesitter/nvim-treesitter", { version = 'main' })
@@ -127,7 +127,6 @@ add("https://github.com/folke/which-key.nvim")
 -- Copilot (without mason)
 add("https://github.com/copilotlsp-nvim/copilot-lsp")
 add("https://github.com/zbirenbaum/copilot.lua")
--- add("https://github.com/CopilotC-Nvim/CopilotChat.nvim")
 add("https://github.com/fang2hou/blink-copilot")
 
 add("https://github.com/kdheepak/panvimdoc")
@@ -200,6 +199,8 @@ require('mini.snippets').setup({
   },
 })
 
+require("fzf-lua").setup({})
+
 -- mardown support
 require('render-markdown').setup({
   -- ft = { "markdown", "codecompanion" },
@@ -229,11 +230,6 @@ vim.lsp.config('*', { capabilities = {
   general = {
       positionEncodings = { 'utf-16', 'utf-8' }, -- the prefered order
   },},})
-
-vim.lsp.enable("markdown_oxide")
-
--- LaTeX
-vim.lsp.enable("texlab")
 
 -- LSP Config & Diagnostics
 vim.diagnostic.config({
@@ -326,16 +322,15 @@ vim.lsp.config["rust_analyzer"] = { settings = { codelens = { enabled = true } }
 vim.lsp.enable("rust_analyzer")
 
 require("crates").setup({})
-vim.lsp.enable("hls")
 require('rustowl').setup()
 
 vim.lsp.config["hls"] = { settings = { codelens = { enabled = true } } }
+vim.lsp.enable("hls")
 
-require("fzf-lua").setup({})
--- require("copilot").setup({})
--- require("CopilotChat").setup()
-require("hardtime").setup({})
-require("which-key").setup({})
+vim.lsp.enable("markdown_oxide")
+
+-- LaTeX
+vim.lsp.enable("texlab")
 
 -- AI
 require("codecompanion").setup({
@@ -352,6 +347,10 @@ require("codecompanion").setup({
     }
   },
 })
+
+-- Keys
+require("hardtime").setup({})
+require("which-key").setup({})
 
 -- Themes
 require("tokyonight").setup({ style = "moon", transparent = true })
