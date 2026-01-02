@@ -125,6 +125,7 @@ add("https://github.com/folke/flash.nvim")
 add("https://github.com/folke/which-key.nvim")
 add("https://github.com/zbirenbaum/copilot.lua")
 add("https://github.com/CopilotC-Nvim/CopilotChat.nvim")
+add("https://github.com/fang2hou/blink-copilot")
 add("https://github.com/kdheepak/panvimdoc")
 add("https://github.com/olimorris/codecompanion.nvim")
 
@@ -222,7 +223,7 @@ vim.opt.fileencodings = { 'utf-8', 'latin1' }
 
 vim.lsp.config('*', { capabilities = {
   general = {
-      positionEncodings = { 'utf8', 'utf-16' }, -- the prefered order
+      positionEncodings = { 'utf-16', 'utf-8' }, -- the prefered order
   },},})
 
 vim.lsp.enable("markdown_oxide")
@@ -240,13 +241,24 @@ vim.diagnostic.config({
   inlay_hint = true,
 })
 
--- Blink Completion
+-- Blink Completionre
+require('blink-copilot').setup({})
+
 require("blink.cmp").setup({
+  sources = {
+     default = { "lsp", "copilot", "buffer", "omni", "codecompanion", "snippets" },
+     providers = {
+        copilot = {
+          name = "copilot",
+          module = "blink-copilot",
+          async = true,
+        },
+     },
+  },
   snippets = { preset = "mini_snippets" },
   fuzzy = { implementation = "lua" },
   appearance = { use_nvim_cmp_as_default = true },
   cmdline = { sources = { "cmdline" } },
-  sources = { default = { "lsp", "buffer", "omni", "codecompanion","snippets",} },
   completion = { documentation = { auto_show = true } },
   signature = { enabled = true, window = { border = "rounded" } },
 })
