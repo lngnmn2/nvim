@@ -294,7 +294,7 @@ require("conform").setup({
     rust = { "rustfmt" },
     ocaml = { "ocamlformat" },
     fsharp = { "fantomas" },
-    javascript = { "prettierd", stop_after_first = true },
+    javascript = { "prettier", stop_after_first = true },
   },
 })
 
@@ -302,7 +302,7 @@ require("lint").linters_by_ft = { sh = { "shellcheck" }, lua = { "selene" } }
 vim.api.nvim_create_autocmd("BufWritePost", { callback = function() require("lint").try_lint() end })
 
 -- LSP Servers (0.12 optimized)
-local servers = { "bashls", "pyright", "ccls", "ocamllsp", "fsautocomplete", "copilot" }
+local servers = { "bashls", "pyright", "ccls", "ocamllsp", "fsautocomplete",}
 for _, srv in ipairs(servers) do vim.lsp.enable(srv) end
 
 vim.lsp.inlay_hint.enable(true)
